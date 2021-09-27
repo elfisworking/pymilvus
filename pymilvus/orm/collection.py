@@ -584,7 +584,7 @@ class Collection:
             return MutationFuture(res)
         return MutationResult(res)
 
-    def search(self, data, anns_field, param, limit, expr=None, partition_names=None,
+    def search(self, data, anns_field, param, limit, round_decimal=-1, expr=None, partition_names=None,
                output_fields=None, timeout=None, **kwargs):
         """
         Conducts a vector similarity search with an optional boolean expression as filter.
@@ -598,6 +598,8 @@ class Collection:
         :type  param: dict
         :param limit: The max number of returned record, also known as ``topk``.
         :type  limit: int
+        :param round_decimal: The specified number of decimal places of returned distance
+        :type  round_decimal: int
         :param expr: The boolean expression used to filter attribute.
         :type  expr: str
         :param partition_names: The names of partitions to search.
@@ -665,8 +667,8 @@ class Collection:
             raise DataTypeNotMatchException(0, ExceptionsMessage.ExprType % type(expr))
 
         conn = self._get_connection()
-        res = conn.search_with_expression(self._name, data, anns_field, param, limit, expr,
-                                          partition_names, output_fields, timeout, **kwargs)
+        res = conn.search_with_expression(self._name, data, anns_field, param, limit, round_decimal,
+                                          expr, partition_names, output_fields, timeout, **kwargs)
         if kwargs.get("_async", False):
             return SearchFuture(res)
         return SearchResult(res)

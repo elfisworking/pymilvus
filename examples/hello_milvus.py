@@ -64,13 +64,14 @@ def hello_milvus():
 
     # load and search
     topK = 5
+    round_decimal = 3
     search_params = {"metric_type": "L2", "params": {"nprobe": 10}}
     import time
     start_time = time.time()
     print(f"\nSearch...")
     # define output_fields of search result
     res = collection.search(
-        vectors[-2:], "float_vector", search_params, topK,
+        vectors[-2:], "float_vector", search_params, topK, round_decimal,
         "count > 100", output_fields=["count", "random_value"]
     )
     end_time = time.time()
